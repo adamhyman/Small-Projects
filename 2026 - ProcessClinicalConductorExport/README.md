@@ -1,4 +1,8 @@
 
+## About
+
+A VBA macro to process data exported from Advarra's Clinical Conductor.
+
 ## Objectives
 
 The macro performs the following cleanup steps **in order**:
