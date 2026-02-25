@@ -1,25 +1,48 @@
 
-#### Input
+## Objectives
 
-To process files exported from Advarra's Clinical Conductor
+The macro performs the following cleanup steps **in order**:
 
-The first few columns (Patient Name, Status, Total Completed, etc) are static.
+1. **Clear unnecessary dates**  
+   For every attribute column group:  
+   → If the **Status** column is **not** "Completed", clear the corresponding **Date** column in the same row.
 
-Then there are attributes, like Prescreen, Screening, Day 1, Day 2, Day 5, Day 10, etc.
-The number of attributes and names can change.
+2. **Remove status & monitored columns**  
+   Delete all **[Attribute] (Status)** and **[Attribute] (Monitored)** columns across the entire table.  
+   → After this step, only **Date** columns remain for each attribute (plus the static left columns).
 
-There are 3 columns for each attribute:
-1.  Date
-2.  Status
-3.  Monitored
+3. **Delete the Prescreen column**  
+   Remove the **Prescreen Date** column entirely (it is typically not needed for final reporting).
 
-#### Objective
+4. **Delete non-qualified rows**  
+   Remove any row where the main **Status** column (a fixed column near the left) equals **"Non-Qualified"** (case-sensitive, trimmed).
 
-1.  In attribute columns, Date will be cleared, when it's corresponding Status is NOT Completed.
-2.  Status & Monitored columns will be deleted.
-3.  The table should be sorted by Screen# (Column position can change)
-4.  Delete all rows where Status (Column position can change) is Non-Qualified
-5.  Delete Prescreen column (Containing Prescreen dates)
+5. **Sort the table**  
+   Sort the remaining rows by the **Screen#** column (ascending).  
+   → Note: The position of the Screen# column may vary between exports, so the macro should locate it dynamically by header name.
 
-Highlighting added to screenshot only, to show cells that will have the date removed.
+## Final Output Structure (after processing)
+
+- Static columns remain (Patient Name, Status, Screen#, Total Completed, etc.)  
+- One date column per relevant attribute (e.g. Screening Date, Day 1 Date, Day 2 Date, …)  
+- Prescreen Date removed  
+- Non-qualified rows removed  
+- Rows sorted by Screen#
+
+## Assumptions & Notes
+
+- Headers are in row 4 (data starts in row 5) — adjust if your exports differ.
+- Column headers contain exact or near-exact text (e.g. "Prescreen Date", "Day 1 Status", "(Monitored)", "(Status)").
+- "Completed" and "Non-Qualified" are matched case-sensitively with trimming.
+- The macro should identify attribute groups dynamically (look for headers containing "(Status)", "(Monitored)").
+- Run this macro on a **copy** of your export file first.
+
+## How to Use
+
+1. Open the exported Excel file.
+2. Press `Alt + F11` to open the VBA editor.
+3. Insert a new module and paste the macro code.
+4. Run the macro (e.g. `ProcessClinicalConductorExport`).
+5. Review the cleaned table and save.
+
 ![Screenshot](Screenshot.png)
