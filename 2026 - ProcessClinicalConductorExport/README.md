@@ -1,7 +1,7 @@
 
 ## About
 
-A VBA macro to process data exported from Advarra's Clinical Conductor.
+A VBA macro to process data exported from a clinical trial administrator.
 
 ## Objectives
 

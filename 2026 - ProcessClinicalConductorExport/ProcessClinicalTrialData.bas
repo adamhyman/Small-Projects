@@ -1,7 +1,7 @@
 
 
 
-Sub ProcessClinicalConductorExport()
+Sub ProcessClinicalTrialData()
     
 
     Dim ws          As Worksheet
