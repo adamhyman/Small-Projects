@@ -1,7 +1,7 @@
 
 
 
-Sub ProcessClinicalTrialData()
+Sub ProcessClinicalConductorExport()
     
 
     Dim ws          As Worksheet
@@ -87,13 +87,14 @@ Sub ProcessClinicalTrialData()
         
         ' Checkif column heading is Status
         ElseIf colHeader.Value = "Status" Then
-            ' Delete rows where value is "Non-Qualified"
+            ' Delete rows where value is "Non-Qualified" or "Prescreened"
             
-            If DEBUG_MODE Then Debug.Print "Deleting rows with Non-Qualified in Status column:  " & colHeader.Address
+            If DEBUG_MODE Then Debug.Print "Deleting rows with Non-Qualified or Prescreened in Status column:  " & colHeader.Address
             
             Dim r As Long
             For r = lastRow To 5 Step -1
-                If Trim(ws.Cells(r, col).Value) = "Non-Qualified" Then
+                If Trim(ws.Cells(r, col).Value) = "Non-Qualified" Or _
+                    Trim(ws.Cells(r, col).Value) = "Prescreened" Then
                     ws.Rows(r).Delete Shift:=xlUp
                 End If
             Next r
@@ -103,11 +104,14 @@ Sub ProcessClinicalTrialData()
     Next col
     
     
+    
     ' Sort by Screen# column
     
+
     ' Try to find "Screen#"
-    colHeader = headerRow.Find("Screen#", LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=True)
-    
+    Set colHeader = headerRow.Find("Screen#", LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=True)
+
+
     ' If can't find, warn user and exit gracefully
     If colHeader Is Nothing Then
         MsgBox "Column 'Screen#' not found in header row.", vbExclamation
@@ -116,8 +120,8 @@ Sub ProcessClinicalTrialData()
     
     ' Found "Screen#" in headerRow, so get column number for sorting
     screenCol = colHeader.Column
-    
-    If DEBUG_MODE Then Debug.Print "Sorting by Screen# in column " & screenCol
+
+    If DEBUG_MODE Then Debug.Print "Sorting by Screen# – found in " & colHeader.Address & ", column " & screenCol
 
     rngTable.Sort Key1:=rngTable.Columns(screenCol - rngTable.Column + 1), _
               Order1:=xlAscending, Header:=xlYes

@@ -18,8 +18,8 @@ The macro performs the following cleanup steps **in order**:
 3. **Delete the Prescreen column**  
    Remove the **Prescreen Date** column entirely (it is typically not needed for final reporting).
 
-4. **Delete non-qualified rows**  
-   Remove any row where the main **Status** column (a fixed column near the left) equals **"Non-Qualified"** (case-sensitive, trimmed).
+4. **Delete rows where Status is non-qualified or prescreened**  
+   Remove any row where the **Status** column (a fixed column near the left) equals **"Non-Qualified"** or **"Prescreened"** (case-sensitive, trimmed).
 
 5. **Sort the table**  
    Sort the remaining rows by the **Screen#** column (ascending).  
@@ -30,7 +30,7 @@ The macro performs the following cleanup steps **in order**:
 - Static columns remain (Patient Name, Status, Screen#, Total Completed, etc.)  
 - One date column per relevant attribute (e.g. Screening Date, Day 1 Date, Day 2 Date, …)  
 - Prescreen Date removed  
-- Non-qualified rows removed  
+- Non-qualified and prescreened rows removed  
 - Rows sorted by Screen#
 
 ## Assumptions & Notes
