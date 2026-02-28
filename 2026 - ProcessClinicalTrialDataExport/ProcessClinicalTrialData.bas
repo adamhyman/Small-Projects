@@ -3,6 +3,8 @@
 
 Sub ProcessClinicalConductorExport()
     
+    Const HEADER_ROW    As Long = 4
+    Const DEBUG_MODE    As Boolean = True   ' Set to False in production
 
     Dim ws          As Worksheet
     Dim rngTable    As Range
@@ -14,18 +16,15 @@ Sub ProcessClinicalConductorExport()
     Dim col         As Long
     Dim lastRow     As Long
     Dim lastCol     As Long
-    
-    Const HEADER_ROW    As Long = 4
-    Const DEBUG_MODE    As Boolean = True   ' Set to False in production
-    
+    Dim tableOffset = HEADER_ROW - 1 as Long
     
     Set ws = ActiveSheet
     
     Set rngTable = ws.Range("A4").CurrentRegion
     
-    ' We want to start 3 rows down
-    ' The range would now include blank rows, so we resize to make rngTable 3 rows smaller
-    Set rngTable = rngTable.Offset(3).Resize(rngTable.Rows.Count - 3)
+    ' We want to start tableOffset rows down
+    ' The range would now include blank rows, so we resize to make rngTable tableOffset rows smaller
+    Set rngTable = rngTable.Offset(tableOffset).Resize(rngTable.Rows.Count - tableOffset)
     
     ' If the table is tiny, alert user and exit
     If rngTable.Rows.Count < 2 Then
@@ -103,14 +102,11 @@ Sub ProcessClinicalConductorExport()
         
     Next col
     
-    
-    
+
     ' Sort by Screen# column
     
-
     ' Try to find "Screen#"
     Set colHeader = headerRow.Find("Screen#", LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=True)
-
 
     ' If can't find, warn user and exit gracefully
     If colHeader Is Nothing Then
